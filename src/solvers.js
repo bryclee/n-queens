@@ -48,23 +48,24 @@ window.countNRooksSolutions = function(n) {
   var solution = new Board({n:n});
   var solutionCount = 0;
 
-  var placeRookN = function(row) {
+  var placeRookN = function(row, possibleColumns) {
+    
+    for (var i=0; i<possibleColumns.length; i++) {
+      var index = possibleColumns[i];
+      solution.togglePiece(row, index);
 
-
-    for (var i=0; i<n; i++) {
-      solution.togglePiece(row, i);
-      if (!solution.hasAnyColConflicts()){
-        if (row === n-1){
-          solutionCount++;
-          solution.togglePiece(row, i);
-          return;
+      if (row === n-1){
+        solutionCount++;
+        solution.togglePiece(row, index);
+        return;
         }
-        placeRookN(row + 1);
-      }
-      solution.togglePiece(row, i);
+        
+      placeRookN(row + 1, possibleColumns.slice(0,i).concat(possibleColumns.slice(i+1)));
+      
+      solution.togglePiece(row, index);
     }
   }
-  placeRookN(0);
+  placeRookN(0, _.range(n));
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
