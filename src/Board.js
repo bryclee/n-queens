@@ -146,10 +146,11 @@
         }
 
       }
-      var total = _.reduce(diag, function(a,b) {
+      /*var total = _.reduce(diag, function(a,b) {
         return a + b;
       });
-      return total > 1;
+      return total > 1;*/
+      return atLeast2(diag);
 
 
     },
@@ -183,10 +184,11 @@
         }
 
       }
-      var total = _.reduce(diag, function(a,b) {
-        return a + b;
-      });
-      return total > 1;
+        /*var total = _.reduce(diag, function(a,b) {
+          return a + b;
+        });
+        return total > 1;*/
+        return atLeast2(diag);
     },
 
     // test if any minor diagonals on this board contain conflicts
@@ -203,6 +205,17 @@
 
 
   });
+
+  var atLeast2 = function(array) {
+    var total = 0;
+    for (var i = 0; i<array.length; i++) {
+      total += array[i];
+      if (total > 1) {
+        return true;
+      }
+    }
+    return false
+  }
 
   var makeEmptyMatrix = function(n) {
     return _(_.range(n)).map(function() {
