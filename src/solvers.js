@@ -47,15 +47,33 @@ window.findNRooksSolution = function(n) {
 window.countNRooksSolutions = function(n) {
   var solution = new Board({n:n});
   var solutionCount = 0;
+  var doublingFactor = 2;
+
+
 
   var placeRookN = function(row, possibleColumns) {
+
+      // Compute half of first row
+    if (row === 0){
+      var l = Math.ceil(n/2);
+    } else {
+      l = possibleColumns.length;
+    }
     
-    for (var i=0; i<possibleColumns.length; i++) {
+    for (var i = 0; i < l; i++){
+
+      // Avoid double counting placing queen in middle
+      // of first row
+      if (row===0 && i===l-1 && n%2===1){
+        doublingFactor = 1;
+      }
+    
+
       var index = possibleColumns[i];
       solution.togglePiece(row, index);
 
       if (row === n-1){
-        solutionCount++;
+        solutionCount += doublingFactor;
         solution.togglePiece(row, index);
         return;
         }
