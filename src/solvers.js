@@ -165,6 +165,7 @@ window.findNQueensSolution = function(n) {
 window.countNQueensSolutions = function(n) {
   var solution = Array.apply(null, Array(n)).map(function(i){return 0});
   var solutionCount = 0;
+  var doublingFactor = 2;
 
   if (n === 0) {
     return 1;
@@ -191,7 +192,16 @@ window.countNQueensSolutions = function(n) {
 
   var placeQueenN = function(row, possibleColumns){
 
-    for (var i = 0; i < possibleColumns.length; i++){
+    if (row === 0){
+      var l = Math.ceil(n/2);
+    } else {
+      l = possibleColumns.length;
+    }
+
+    for (var i = 0; i < l; i++){
+      if (row===0 && i===l-1 && n%2===1){
+        doublingFactor = 1;
+      }
 
       var index = possibleColumns[i];
       togglePiece(row, index);
@@ -199,8 +209,7 @@ window.countNQueensSolutions = function(n) {
       if (!majorDiagonalConflictAt(index - row) &&
           !minorDiagonalConflictAt(index + row)){
         if (row === n - 1){
-
-          solutionCount++;
+          solutionCount += doublingFactor;
           togglePiece(row, index);
           return;
         }
