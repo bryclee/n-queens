@@ -59,7 +59,7 @@ window.countNRooksSolutions = function(n) {
     } else {
       l = possibleColumns.length;
     }
-    
+
     for (var i = 0; i < l; i++){
 
       // Avoid double counting placing queen in middle
@@ -119,7 +119,7 @@ window.findNQueensSolution = function(n) {
 
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
-window.countNQueensSolutions = function(n) {
+/*window.countNQueensSolutions = function(n) {
   var solution = new Board({n:n}); 
   var solutionCount = 0;
   var doublingFactor = 2;
@@ -155,6 +155,63 @@ window.countNQueensSolutions = function(n) {
         placeQueenN(row + 1, possibleColumns.slice(0,i).concat(possibleColumns.slice(i + 1)));
       }
       solution.togglePiece(row, index);
+    }
+  }
+  placeQueenN(0, _.range(n));
+  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
+  return solutionCount;
+};*/
+
+window.countNQueensSolutions = function(n) {
+  var solution = Array.apply(null, Array(n)).map(function(i){return 0});
+  var solutionCount = 0;
+
+  if (n === 0) {
+    return 1;
+  }
+
+  var togglePiece = function(row, index){
+    solution[row] = solution[row] ^ (1 << n - index - 1);
+  }
+
+  var majorDiagonalConflictAt = function(index) {
+    var total = 0;
+    for (var i = 0; i < n; i++) {
+      total = total ^ ((solution[i] << i) & (1 << (n - index - 1)));
+    }
+    return total === 0;
+  }
+  var minorDiagonalConflictAt = function(index) {
+    var total = 0;
+    for (var i = 0; i < n; i++) {
+      total = total ^ ((solution[i] << (n-i-1)) & (1 << (2 * (n-1) - index)));
+    }
+    return total === 0;
+  }
+  var displaySolution = function(solution){
+    for (var i=0; i<solution.length; i++) {
+      console.log(solution[i].toString(2));
+    }
+  }
+  var placeQueenN = function(row, possibleColumns){
+
+    for (var i = 0; i < possibleColumns.length; i++){
+      //debugger;
+
+      var index = possibleColumns[i];
+      togglePiece(row, index);
+      //console.log(possibleColumns);
+      if (!majorDiagonalConflictAt(index - row) &&
+          !minorDiagonalConflictAt(index + row)){
+        if (row === n - 1){
+          //displaySolution(solution);
+          solutionCount++;
+          togglePiece(row, index);
+          return;
+        }
+        placeQueenN(row + 1, possibleColumns.slice(0,i).concat(possibleColumns.slice(i + 1)));
+      }
+      togglePiece(row, index);
     }
   }
   placeQueenN(0, _.range(n));
