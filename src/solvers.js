@@ -102,20 +102,35 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solution = new Board({n:n}); //fixme
+  var solution = new Board({n:n}); 
   var solutionCount = 0;
+  var doublingFactor = 2;
 
   if (n === 0)
     return 1;
 
   var placeQueenN = function(row, possibleColumns){
-    for (var i = 0; i < possibleColumns.length; i++){
+
+    // Compute half of first row
+    if (row === 0){
+      var l = Math.ceil(n/2);
+    } else {
+      l = possibleColumns.length;
+    }
+
+    for (var i = 0; i < l; i++){
+
+      // Avoid double counting placing queen in middle
+      // of first row
+      if (row===0 && i===l-1 && n%2===1){
+        doublingFactor = 1;
+      }
       var index = possibleColumns[i];
       solution.togglePiece(row, index);
       if (!solution.hasMajorDiagonalConflictAt(index - row) &&
           !solution.hasMinorDiagonalConflictAt(index + row)){
         if (row === n - 1){
-          solutionCount++;
+          solutionCount += doublingFactor;
           solution.togglePiece(row, index);
           return;
         }
