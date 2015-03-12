@@ -188,23 +188,18 @@ window.countNQueensSolutions = function(n) {
     }
     return total === 0;
   }
-  var displaySolution = function(solution){
-    for (var i=0; i<solution.length; i++) {
-      console.log(solution[i].toString(2));
-    }
-  }
+
   var placeQueenN = function(row, possibleColumns){
 
     for (var i = 0; i < possibleColumns.length; i++){
-      //debugger;
 
       var index = possibleColumns[i];
       togglePiece(row, index);
-      //console.log(possibleColumns);
+
       if (!majorDiagonalConflictAt(index - row) &&
           !minorDiagonalConflictAt(index + row)){
         if (row === n - 1){
-          //displaySolution(solution);
+
           solutionCount++;
           togglePiece(row, index);
           return;
